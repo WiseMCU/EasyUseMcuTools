@@ -8,7 +8,7 @@ RTT打印小工具（by：睿智的嵌入式（WiseMCU））
 /**
  * 调试信息输出总开关
  */
-#define DEBUG_ENABLE					(1)
+#define DEBUG_ENABLE                    (1)
 
 /**
  * 调试信息输出等级设置
@@ -27,7 +27,7 @@ RTT打印小工具（by：睿智的嵌入式（WiseMCU））
  *
  * @note 时间格式化将消耗较多算力，若资源紧张可直接注释此宏定义
  */
-#define DEBUG_TIME_FORMAT_ENABLE		(1)
+#define DEBUG_TIME_FORMAT_ENABLE        (1)
 ```
 
 ```c
