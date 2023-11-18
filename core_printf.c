@@ -63,14 +63,11 @@ void core_printf(const char *fmt, ...)
  */
 void cmd_printf(char* para, uint32_t paralen, char *fmt, ...)
 {
-    static char Buf[128];
     osMutexAcquire(segger_rtt_mutex, osWaitForever);
-    
     va_list v_args;
     va_start(v_args, fmt);
     SEGGER_RTT_vprintf(0, fmt, &v_args);
     va_end(v_args);
-
     if(para != NULL)
     {
         for(int i = 0; i < paralen; i++)
@@ -79,7 +76,6 @@ void cmd_printf(char* para, uint32_t paralen, char *fmt, ...)
         }
     }
     SEGGER_RTT_printf(0, "\r\n");
-
     osMutexRelease(segger_rtt_mutex);
 }
 
