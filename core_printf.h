@@ -30,19 +30,86 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "SEGGER_RTT.h"
-#include "cmsis_os2.h"
 
 /* Exported define -----------------------------------------------------------*/
+/**
+ * 调试信息输出总开关
+ */
+#define DEBUG_ENABLE                1
+
+/**
+ * 调试信息时间格式化设置
+ *
+ * @note 时间格式化将消耗较多算力，若资源紧张可直接注释此宏定义
+ */
+#define DEBUG_TIME_FORMAT_ENABLE    1
+
+/**
+ * 调试信息输出等级设置
+ *
+ * @note 高于此等级的信息不会输出，开发后期可将等级设置为DEBUG_LEVEL_WARNING
+ */
+#define DEBUG_LEVEL_ERROR               0
+#define DEBUG_LEVEL_WARNING             1
+#define DEBUG_LEVEL_INFO                2
+#define DEBUG_LEVEL_LOG                 3
+
+#define DEBUG_LEVEL                     DEBUG_LEVEL_LOG
+
+/**
+ * 操作系统配置定义
+ */
+#define THRAED                      0
+
+#if (THREAD == THREADX)
+    /* 使用ThreadX操作系统 */
+    #include "tx_api.h"
+#elif (THREAD == RTX5)
+    /* 使用RTX5操作系统 */
+    #include "cmsis_os2.h"
+#elif (THREAD == 0)
+    /* 无操作系统 */
+#endif
+
 #if(DEBUG_ENABLE)
 #if(DEBUG_TIME_FORMAT_ENABLE)
-#define GET_TIME()      (osKernelGetTickCount() / 1000 / 3600),      \
-                        (osKernelGetTickCount() / 1000 % 3600 / 60), \
-                        (osKernelGetTickCount() / 1000 % 60),        \
-                        (osKernelGetTickCount() % 1000)
-#define TIME_FMT        "[%02d:%02d:%02d.%03d] "
+#if (THREAD == THREADX)
+    /* 使用ThreadX操作系统 */
+    #include "tx_api.h"
+    #define GET_TIME()      (tx_time_get() / 1000 / 3600),      \
+                            (tx_time_get() / 1000 % 3600 / 60), \
+                            (tx_time_get() / 1000 % 60),        \
+                            (tx_time_get() / 10 % 100)
+    #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
+#elif (THREAD == RTX5)
+    /* 使用RTX5操作系统 */
+    #include "cmsis_os2.h"
+    #define GET_TIME()      (osKernelGetTickCount() / 1000 / 3600),      \
+                            (osKernelGetTickCount() / 1000 % 3600 / 60), \
+                            (osKernelGetTickCount() / 1000 % 60),        \
+                            (osKernelGetTickCount() % 1000)
+    #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
+#elif (THREAD == 0)
+    /* 无操作系统 */
+    #define GET_TIME()      0, 0, 0, 0
+    #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
+#endif
 #else
-#define GET_TIME()      osKernelGetTickCount()
-#define TIME_FMT        "[%8d] "
+#if (THREAD == THREADX)
+    /* 使用ThreadX操作系统 */
+    #include "tx_api.h"
+    #define GET_TIME()      tx_time_get()
+    #define TIME_FMT        "[%8d] "
+#elif (THREAD == RTX5)
+    /* 使用RTX5操作系统 */
+    #include "cmsis_os2.h"
+    #define GET_TIME()      osKernelGetTickCount()
+    #define TIME_FMT        "[%8d] "
+#elif (THREAD == 0)
+    /* 无操作系统 */
+    #define GET_TIME()      0
+    #define TIME_FMT        "[%8d] "
+#endif
 #endif /* DEBUG_TIME_FORMAT_ENABLE */
 
 #if (DEBUG_LEVEL >= DEBUG_LEVEL_DEBUG)
@@ -55,7 +122,7 @@ do{                                                         \
 }while(0)
 #else
 #define DEBUG(fmt, args...)
-#endif /* DEBUG_LEVEL >= DEBUG_LEVEL_LOG */
+#endif /* DEBUG_LEVEL >= DEBUG_LEVEL_DEBUG */
 
 #if (DEBUG_LEVEL >= DEBUG_LEVEL_INFO)
 #define INFO(fmt, args...)                                  \
@@ -103,7 +170,7 @@ do {                                                        \
 } while(0)
 #else
 #define CMD_LOG(para, paralen, fmt, args...)
-#endif /* DEBUG_LEVEL >= DEBUG_LEVEL_LOG */
+#endif /* DEBUG_LEVEL >= DEBUG_LEVEL_DEBUG */
 
 #else
 
