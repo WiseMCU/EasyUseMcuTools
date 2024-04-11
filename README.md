@@ -34,7 +34,7 @@ RTT打印工具（by：睿智的嵌入式（WiseMCU））
  */
 #ifndef (RTT_THRAED)
     /* 默认不使用操作系统 */
-    #define RTT_THRAED                      NONE
+    #define RTT_THRAED                  RTT_NONE
 #endif
 ```
 
@@ -55,7 +55,7 @@ RTT打印工具（by：睿智的嵌入式（WiseMCU））
     
 3.  终端显示：
 
-    ```
+    ```c
     [00:00:00.00] This is a debug information...  (白色字体)
     [00:00:00.00] This is a information...        (绿色字体)
     [00:00:00.00] This is a warning...            (黄色字体)

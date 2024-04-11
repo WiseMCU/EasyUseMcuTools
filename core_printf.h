@@ -31,6 +31,10 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "SEGGER_RTT.h"
 
+#ifdef(MIDDLEWARES_H)
+#include "middlewares.h"
+#endif
+
 /* Exported define -----------------------------------------------------------*/
 /**
  * 调试信息输出等级设置
@@ -47,11 +51,11 @@ extern "C" {
 */
 enum{
     /* 不使用操作系统 */
-    NONE = 0,
+    RTT_NONE = 0,
     /* 使用ThreadX操作系统 */
-    THREADX,
+    RTT_THREADX,
     /* 使用RTX5操作系统 */
-    RTX5,
+    RTT_RTX5,
 };
 
 /**
@@ -85,22 +89,22 @@ enum{
  */
 #ifndef (RTT_THRAED)
     /* 默认不使用操作系统 */
-    #define RTT_THRAED                      NONE
+    #define RTT_THRAED                      RTT_NONE
 #endif
 
-#if (RTT_THRAED == THREADX)
+#if (RTT_THRAED == RTT_THREADX)
     /* 使用ThreadX操作系统 */
     #include "tx_api.h"
-#elif (RTT_THRAED == RTX5)
+#elif (RTT_THRAED == RTT_RTX5)
     /* 使用RTX5操作系统 */
     #include "cmsis_os2.h"
-#elif (RTT_THRAED == NONE)
+#elif (RTT_THRAED == RTT_NONE)
     /* 无操作系统 */
 #endif
 
 #if(DEBUG_ENABLE)
 #if(DEBUG_TIME_FORMAT_ENABLE)
-#if (RTT_THRAED == THREADX)
+#if (RTT_THRAED == RTT_THREADX)
     /* 使用ThreadX操作系统 */
     #include "tx_api.h"
     #define GET_TIME()      (tx_time_get() / 1000 / 3600),      \
@@ -108,7 +112,7 @@ enum{
                             (tx_time_get() / 1000 % 60),        \
                             (tx_time_get() / 10 % 100)
     #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
-#elif (RTT_THRAED == RTX5)
+#elif (RTT_THRAED == RTT_RTX5)
     /* 使用RTX5操作系统 */
     #include "cmsis_os2.h"
     #define GET_TIME()      (osKernelGetTickCount() / 1000 / 3600),      \
@@ -116,23 +120,23 @@ enum{
                             (osKernelGetTickCount() / 1000 % 60),        \
                             (osKernelGetTickCount() % 1000)
     #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
-#elif (RTT_THRAED == NONE)
+#elif (RTT_THRAED == RTT_NONE)
     /* 无操作系统 */
     #define GET_TIME()      0, 0, 0, 0
     #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
 #endif
 #else
-#if (RTT_THRAED == THREADX)
+#if (RTT_THRAED == RTT_THREADX)
     /* 使用ThreadX操作系统 */
     #include "tx_api.h"
     #define GET_TIME()      tx_time_get()
     #define TIME_FMT        "[%8d] "
-#elif (RTT_THRAED == RTX5)
+#elif (RTT_THRAED == RTT_RTX5)
     /* 使用RTX5操作系统 */
     #include "cmsis_os2.h"
     #define GET_TIME()      osKernelGetTickCount()
     #define TIME_FMT        "[%8d] "
-#elif (RTT_THRAED == NONE)
+#elif (RTT_THRAED == RTT_NONE)
     /* 无操作系统 */
     #define GET_TIME()      0
     #define TIME_FMT        "[%8d] "
