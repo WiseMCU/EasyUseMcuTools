@@ -31,37 +31,28 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "SEGGER_RTT.h"
 
-#ifdef(MIDDLEWARES_H)
-#include "middlewares.h"
-#endif
-
 /* Exported define -----------------------------------------------------------*/
 /**
  * 调试信息输出等级设置
  *
  * @note 高于此等级的信息不会输出，开发后期可将等级设置为DEBUG_LEVEL_WARNING
  */
-#define DEBUG_LEVEL_ERROR           0
-#define DEBUG_LEVEL_WARNING         1
-#define DEBUG_LEVEL_INFO            2
-#define DEBUG_LEVEL_LOG             3
+#define DEBUG_LEVEL_ERROR               0
+#define DEBUG_LEVEL_WARNING             1
+#define DEBUG_LEVEL_INFO                2
+#define DEBUG_LEVEL_LOG                 3
 
 /**
- * 枚举已兼容的操作系统
+ * 已兼容的操作系统
 */
-enum{
-    /* 不使用操作系统 */
-    RTT_NONE = 0,
-    /* 使用ThreadX操作系统 */
-    RTT_THREADX,
-    /* 使用RTX5操作系统 */
-    RTT_RTX5,
-};
+#define RTT_TOOL_NONE                   0 // 不使用操作系统
+#define RTT_TOOL_THREADX                1 // 使用ThreadX操作系统
+#define RTT_TOOL_RTX5                   2 // 使用RTX5操作系统
 
 /**
  * 调试信息输出总开关
  */
-#ifndef (DEBUG_ENABLE)
+#ifndef DEBUG_ENABLE
     /* 默认开启打印 */
     #define DEBUG_ENABLE                1
 #endif
@@ -71,7 +62,7 @@ enum{
  *
  * @note 时间格式化将消耗较多算力，若资源紧张可直接注释此宏定义
  */
-#ifndef (DEBUG_TIME_FORMAT_ENABLE)
+#ifndef DEBUG_TIME_FORMAT_ENABLE
     /* 默认开启时间格式化 */
     #define DEBUG_TIME_FORMAT_ENABLE    1
 #endif
@@ -79,7 +70,7 @@ enum{
 /**
  * 屏蔽打印等级配置
  */
-#ifndef (DEBUG_LEVEL)
+#ifndef DEBUG_LEVEL
     /* 默认所有等级都打印 */
     #define DEBUG_LEVEL                 DEBUG_LEVEL_LOG
 #endif
@@ -87,56 +78,49 @@ enum{
 /**
  * 操作系统配置定义
  */
-#ifndef (RTT_THRAED)
+#ifndef RTT_TOOL_THREAD
     /* 默认不使用操作系统 */
-    #define RTT_THRAED                      RTT_NONE
+    #define RTT_TOOL_THREAD             RTT_TOOL_NONE
 #endif
 
-#if (RTT_THRAED == RTT_THREADX)
+#if (RTT_TOOL_THREAD == RTT_TOOL_THREADX)
     /* 使用ThreadX操作系统 */
     #include "tx_api.h"
-#elif (RTT_THRAED == RTT_RTX5)
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTX5)
     /* 使用RTX5操作系统 */
     #include "cmsis_os2.h"
-#elif (RTT_THRAED == RTT_NONE)
+#elif (RTT_TOOL_THREAD == RTT_TOOL_NONE)
     /* 无操作系统 */
 #endif
 
 #if(DEBUG_ENABLE)
 #if(DEBUG_TIME_FORMAT_ENABLE)
-#if (RTT_THRAED == RTT_THREADX)
-    /* 使用ThreadX操作系统 */
-    #include "tx_api.h"
+#if (RTT_TOOL_THREAD == RTT_TOOL_THREADX)
     #define GET_TIME()      (tx_time_get() / 1000 / 3600),      \
                             (tx_time_get() / 1000 % 3600 / 60), \
                             (tx_time_get() / 1000 % 60),        \
                             (tx_time_get() / 10 % 100)
     #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
-#elif (RTT_THRAED == RTT_RTX5)
-    /* 使用RTX5操作系统 */
-    #include "cmsis_os2.h"
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTX5)
     #define GET_TIME()      (osKernelGetTickCount() / 1000 / 3600),      \
                             (osKernelGetTickCount() / 1000 % 3600 / 60), \
                             (osKernelGetTickCount() / 1000 % 60),        \
                             (osKernelGetTickCount() % 1000)
     #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
-#elif (RTT_THRAED == RTT_NONE)
-    /* 无操作系统 */
+#elif (RTT_TOOL_THREAD == RTT_TOOL_NONE)
     #define GET_TIME()      0, 0, 0, 0
     #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
 #endif
 #else
-#if (RTT_THRAED == RTT_THREADX)
+#if (RTT_TOOL_THREAD == RTT_TOOL_THREADX)
     /* 使用ThreadX操作系统 */
-    #include "tx_api.h"
     #define GET_TIME()      tx_time_get()
     #define TIME_FMT        "[%8d] "
-#elif (RTT_THRAED == RTT_RTX5)
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTX5)
     /* 使用RTX5操作系统 */
-    #include "cmsis_os2.h"
     #define GET_TIME()      osKernelGetTickCount()
     #define TIME_FMT        "[%8d] "
-#elif (RTT_THRAED == RTT_NONE)
+#elif (RTT_TOOL_THREAD == RTT_TOOL_NONE)
     /* 无操作系统 */
     #define GET_TIME()      0
     #define TIME_FMT        "[%8d] "
@@ -241,7 +225,7 @@ extern void core_printf(const char *fmt, ...);
  * @param[in] fmt 定义同标准库printf函数
  * @note 不可在中断服务程序或中断回调函数中使用
  */
-extern void cmd_printf(char* para, uint32_t paralen, char *fmt, ...);
+extern void cmd_printf(char* para, uint32_t paralen, const char *fmt, ...);
 
 #ifdef __cplusplus
 }
