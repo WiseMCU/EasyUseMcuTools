@@ -14,22 +14,6 @@
 extern "C" {
 #endif
 
-/* Includes -----------------------------------------------------------------*/
-/**
- * 标准库头文件
- */
-#include <math.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdbool.h>
-
-/**
- * 功能模块库头文件
-*/
-/* RTT打印工具 */
-#include "middlewares\rtt_log\core_printf.h"
-
 /* Exported define ----------------------------------------------------------*/
 /*---------------------------------- COMMON ---------------------------------*/
 /**
@@ -81,6 +65,14 @@ extern "C" {
  */
 #define FIELD_SIZEOF(type, member)  (sizeof(((type*)0)->member))
 
+/**
+ * 操作系统ID,所有工具内兼容操作系统使用ID一致
+*/
+#define THREAD_NONE         0 // 不使用操作系统
+#define THREAD_THREADX      1 // 使用ThreadX操作系统
+#define THREAD_RTX5         2 // 使用RTX5操作系统
+#define THREAD_RT_THREAD    2 // 使用RT-Thread操作系统
+
 /*---------------------------------- RTT LOG --------------------------------*/
 /**
  * 调试信息输出总开关
@@ -102,7 +94,23 @@ extern "C" {
 /**
  * RTT打印操作系统配置定义
  */
-#define RTT_THRAED                  RTT_NONE
+#define RTT_TOOL_THREAD             RTT_TOOL_NONE
+
+/* Includes -----------------------------------------------------------------*/
+/**
+ * 标准库头文件
+ */
+#include <math.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+/**
+ * 功能模块库头文件
+*/
+/* RTT打印工具 */
+#include "middlewares/rtt_log/core_printf.h"
 
 #ifdef __cplusplus
 }
