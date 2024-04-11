@@ -10,8 +10,12 @@
 
 /* Private define ------------------------------------------------------------*/
 /* 定义缓冲区大小，可以根据实际情况调整 */
-#define RTT_PRINTF_BUFFER_SIZE 256
+#ifndef RTT_PRINTF_BUFFER_SIZE
+    /* 默认缓冲区大小 256 */
+    #define RTT_PRINTF_BUFFER_SIZE  256
+#endif
 
+/* 宏定义检查 */
 #ifndef RTT_TOOL_THREAD
     #error RTT_TOOL_THREAD is no define
 #endif

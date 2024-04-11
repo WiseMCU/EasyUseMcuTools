@@ -6,7 +6,7 @@ RTT打印工具（by：睿智的嵌入式（WiseMCU））
 /**
  * 调试信息输出总开关
  */
-#ifndef (DEBUG_ENABLE)
+#ifndef DEBUG_ENABLE
     /* 默认开启打印 */
     #define DEBUG_ENABLE                1
 #endif
@@ -16,7 +16,7 @@ RTT打印工具（by：睿智的嵌入式（WiseMCU））
  *
  * @note 时间格式化将消耗较多算力，若资源紧张可直接注释此宏定义
  */
-#ifndef (DEBUG_TIME_FORMAT_ENABLE)
+#ifndef DEBUG_TIME_FORMAT_ENABLE
     /* 默认开启时间格式化 */
     #define DEBUG_TIME_FORMAT_ENABLE    1
 #endif
@@ -24,7 +24,7 @@ RTT打印工具（by：睿智的嵌入式（WiseMCU））
 /**
  * 屏蔽打印等级配置
  */
-#ifndef (DEBUG_LEVEL)
+#ifndef DEBUG_LEVEL
     /* 默认所有等级都打印 */
     #define DEBUG_LEVEL                 DEBUG_LEVEL_LOG
 #endif
@@ -32,9 +32,9 @@ RTT打印工具（by：睿智的嵌入式（WiseMCU））
 /**
  * 操作系统配置定义
  */
-#ifndef (RTT_THRAED)
+#ifndef RTT_TOOL_THREAD
     /* 默认不使用操作系统 */
-    #define RTT_THRAED                  RTT_NONE
+    #define RTT_TOOL_THREAD             RTT_TOOL_NONE
 #endif
 ```
 
