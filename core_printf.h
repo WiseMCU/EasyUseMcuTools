@@ -1,7 +1,7 @@
 /**
  * @file      core_printf.h
  * @brief     信息输出相关函数
- * @version   1.0
+ * @version   1.1
  *------------------------------------------------------------------------------
  * @attention 使用示例：
  *            ① 初始化：segger_rtt_init();
@@ -17,7 +17,7 @@
  *            [00:00:00.00] This is a information...        (绿色字体)
  *            [00:00:00.00] This is a warning...            (黄色字体)
  *            [00:00:00.00] This is a error...              (红色字体)
- *            [00:00:00.00] This is a cmd log 0x01 0x02...  (白色字体)
+ *            [00:00:00.00] This is a cmd log 0x01 0x02     (白色字体)
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -33,47 +33,74 @@ extern "C" {
 
 /* Exported define -----------------------------------------------------------*/
 /**
+ * 调试信息输出等级设置
+ *
+ * @note 高于此等级的信息不会输出，开发后期可将等级设置为DEBUG_LEVEL_WARNING
+ */
+#define DEBUG_LEVEL_ERROR           0
+#define DEBUG_LEVEL_WARNING         1
+#define DEBUG_LEVEL_INFO            2
+#define DEBUG_LEVEL_LOG             3
+
+/**
+ * 枚举已兼容的操作系统
+*/
+enum{
+    /* 不使用操作系统 */
+    NONE = 0,
+    /* 使用ThreadX操作系统 */
+    THREADX,
+    /* 使用RTX5操作系统 */
+    RTX5,
+};
+
+/**
  * 调试信息输出总开关
  */
-#define DEBUG_ENABLE                1
+#ifndef (DEBUG_ENABLE)
+    /* 默认开启打印 */
+    #define DEBUG_ENABLE                1
+#endif
 
 /**
  * 调试信息时间格式化设置
  *
  * @note 时间格式化将消耗较多算力，若资源紧张可直接注释此宏定义
  */
-#define DEBUG_TIME_FORMAT_ENABLE    1
+#ifndef (DEBUG_TIME_FORMAT_ENABLE)
+    /* 默认开启时间格式化 */
+    #define DEBUG_TIME_FORMAT_ENABLE    1
+#endif
 
 /**
- * 调试信息输出等级设置
- *
- * @note 高于此等级的信息不会输出，开发后期可将等级设置为DEBUG_LEVEL_WARNING
+ * 屏蔽打印等级配置
  */
-#define DEBUG_LEVEL_ERROR               0
-#define DEBUG_LEVEL_WARNING             1
-#define DEBUG_LEVEL_INFO                2
-#define DEBUG_LEVEL_LOG                 3
-
-#define DEBUG_LEVEL                     DEBUG_LEVEL_LOG
+#ifndef (DEBUG_LEVEL)
+    /* 默认所有等级都打印 */
+    #define DEBUG_LEVEL                 DEBUG_LEVEL_LOG
+#endif
 
 /**
  * 操作系统配置定义
  */
-#define THRAED                      0
+#ifndef (RTT_THRAED)
+    /* 默认不使用操作系统 */
+    #define RTT_THRAED                      NONE
+#endif
 
-#if (THREAD == THREADX)
+#if (RTT_THRAED == THREADX)
     /* 使用ThreadX操作系统 */
     #include "tx_api.h"
-#elif (THREAD == RTX5)
+#elif (RTT_THRAED == RTX5)
     /* 使用RTX5操作系统 */
     #include "cmsis_os2.h"
-#elif (THREAD == 0)
+#elif (RTT_THRAED == NONE)
     /* 无操作系统 */
 #endif
 
 #if(DEBUG_ENABLE)
 #if(DEBUG_TIME_FORMAT_ENABLE)
-#if (THREAD == THREADX)
+#if (RTT_THRAED == THREADX)
     /* 使用ThreadX操作系统 */
     #include "tx_api.h"
     #define GET_TIME()      (tx_time_get() / 1000 / 3600),      \
@@ -81,7 +108,7 @@ extern "C" {
                             (tx_time_get() / 1000 % 60),        \
                             (tx_time_get() / 10 % 100)
     #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
-#elif (THREAD == RTX5)
+#elif (RTT_THRAED == RTX5)
     /* 使用RTX5操作系统 */
     #include "cmsis_os2.h"
     #define GET_TIME()      (osKernelGetTickCount() / 1000 / 3600),      \
@@ -89,23 +116,23 @@ extern "C" {
                             (osKernelGetTickCount() / 1000 % 60),        \
                             (osKernelGetTickCount() % 1000)
     #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
-#elif (THREAD == 0)
+#elif (RTT_THRAED == NONE)
     /* 无操作系统 */
     #define GET_TIME()      0, 0, 0, 0
     #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
 #endif
 #else
-#if (THREAD == THREADX)
+#if (RTT_THRAED == THREADX)
     /* 使用ThreadX操作系统 */
     #include "tx_api.h"
     #define GET_TIME()      tx_time_get()
     #define TIME_FMT        "[%8d] "
-#elif (THREAD == RTX5)
+#elif (RTT_THRAED == RTX5)
     /* 使用RTX5操作系统 */
     #include "cmsis_os2.h"
     #define GET_TIME()      osKernelGetTickCount()
     #define TIME_FMT        "[%8d] "
-#elif (THREAD == 0)
+#elif (RTT_THRAED == NONE)
     /* 无操作系统 */
     #define GET_TIME()      0
     #define TIME_FMT        "[%8d] "

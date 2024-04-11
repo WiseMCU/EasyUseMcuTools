@@ -1,7 +1,7 @@
 /**
  * @file      core_printf.c
  * @brief     信息输出相关函数
- * @version   1.0
+ * @version   1.1
  */
 
 /* Includes ------------------------------------------------------------------*/
@@ -15,17 +15,19 @@
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
-
 /**
  * SEGGER RTT组件数据发送互斥信号量
  */
-#if (THREAD == THREADX)
+#if (RTT_THRAED == THREADX)
     static TX_MUTEX segger_rtt_mutex;
-#elif (THREAD == RTX5)
+#elif (RTT_THRAED == RTX5)
     static osMutexId_t segger_rtt_mutex;
 #endif
 
-#if(DEBUG_ENABLE == 1)
+/**
+ * 如果未开启打印则不定义缓存区节约内存
+*/
+#if(DEBUG_ENABLE)
 /* 创建缓冲区 */
 static char rtt_buffer[RTT_PRINTF_BUFFER_SIZE];
 #endif /* DEBUG_ENABLE */
@@ -41,9 +43,9 @@ static char rtt_buffer[RTT_PRINTF_BUFFER_SIZE];
 int32_t segger_rtt_init(void)
 {
     /* 创建互斥信号量 */
-#if (THREAD == THREADX)
+#if (RTT_THRAED == THREADX)
     tx_mutex_create(&segger_rtt_mutex, "SEGGER RTT MUTEX", TX_INHERIT);
-#elif (THREAD == RTX5)
+#elif (RTT_THRAED == RTX5)
     segger_rtt_mutex = osMutexNew(&(const osMutexAttr_t ){.name = "SEGGER RTT MUTEX"});
 #endif
 
@@ -64,9 +66,9 @@ void core_printf(const char *fmt, ...)
     va_list v_args;
     
     /* 获取互斥体 */
-#if (THREAD == THREADX)
+#if (RTT_THRAED == THREADX)
     tx_mutex_get(&segger_rtt_mutex, TX_WAIT_FOREVER);
-#elif (THREAD == RTX5)
+#elif (RTT_THRAED == RTX5)
     osMutexAcquire(segger_rtt_mutex, osWaitForever);
 #endif
     
@@ -79,9 +81,9 @@ void core_printf(const char *fmt, ...)
     SEGGER_RTT_WriteString(0, rtt_buffer);
     
     /* 释放互斥体 */
-#if (THREAD == THREADX)
+#if (RTT_THRAED == THREADX)
     tx_mutex_put(&segger_rtt_mutex);
-#elif (THREAD == RTX5)
+#elif (RTT_THRAED == RTX5)
     osMutexRelease(segger_rtt_mutex);
 #endif
     
@@ -102,9 +104,9 @@ void cmd_printf(char* para, uint32_t paralen, const char *fmt, ...)
     int buffer_space = RTT_PRINTF_BUFFER_SIZE;
 
     /* 获取互斥体 */
-#if (THREAD == THREADX)
+#if (RTT_THRAED == THREADX)
     tx_mutex_get(&segger_rtt_mutex, TX_WAIT_FOREVER);
-#elif (THREAD == RTX5)
+#elif (RTT_THRAED == RTX5)
     osMutexAcquire(segger_rtt_mutex, osWaitForever);
 #endif
 
@@ -152,9 +154,9 @@ void cmd_printf(char* para, uint32_t paralen, const char *fmt, ...)
     SEGGER_RTT_WriteString(0, rtt_buffer);
 
     /* 释放互斥体 */
-#if (THREAD == THREADX)
+#if (RTT_THRAED == THREADX)
     tx_mutex_put(&segger_rtt_mutex);
-#elif (THREAD == RTX5)
+#elif (RTT_THRAED == RTX5)
     osMutexRelease(segger_rtt_mutex);
 #endif
 }
