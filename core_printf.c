@@ -8,7 +8,7 @@
 #include "core_printf.h"
 #include <stdio.h>
 
-/* Private define ------------------------------------------------------------*/
+/* Define   ------------------------------------------------------------------*/
 /* 定义缓冲区大小，可以根据实际情况调整 */
 #ifndef RTT_PRINTF_BUFFER_SIZE
     /* 默认缓冲区大小 256 */
@@ -20,9 +20,6 @@
     #error RTT_TOOL_THREAD is no define
 #endif
 
-/* Private typedef -----------------------------------------------------------*/
-
-/* Private variables ---------------------------------------------------------*/
 /**
  * SEGGER RTT组件数据发送互斥信号量
  */
@@ -40,9 +37,7 @@
 static char rtt_buffer[RTT_PRINTF_BUFFER_SIZE];
 #endif /* DEBUG_ENABLE */
 
-/* Private function prototypes -----------------------------------------------*/
-
-/* Exported function ---------------------------------------------------------*/
+/* Function ------------------------------------------------------------------*/
 /**
  * SEGGER RTT组件初始化
  *
@@ -176,7 +171,3 @@ void cmd_printf(char* para, uint32_t paralen, const char *fmt, ...)
     osMutexRelease(segger_rtt_mutex);
 #endif
 }
-
-/* Private function ----------------------------------------------------------*/
-
-/********************************* END OF FILE ********************************/
