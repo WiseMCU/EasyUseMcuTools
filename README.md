@@ -3,7 +3,7 @@
 
 可以直接使用，不需要额外配置
 
-使用示例：
+### 使用示例：
 
 ```c
 /* 宏定义PI */
@@ -26,7 +26,7 @@ DEBUG("Angle: %f, A: %f, B: %f, C: %f", svpwm.vector_angle,
     svpwm.a_pwm_duty, svpwm.b_pwm_duty, svpwm.b_pwm_duty);
 ```
 
-按以上配置编写测试DEMO：
+### 编写测试DEMO：
 
 ```c
 for(float angle = 0.0f; angle < 2 * PI; angle += 0.01f)
@@ -38,6 +38,8 @@ for(float angle = 0.0f; angle < 2 * PI; angle += 0.01f)
 }
 ```
 
-将数据可视化，结果如图：
+将数据可视化
+
+### 结果如图：
 
 ![image-20240518023312764](demo.png)
