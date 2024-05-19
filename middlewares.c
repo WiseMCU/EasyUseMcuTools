@@ -15,7 +15,7 @@
 #include "middlewares/rtt_log/SEGGER_RTT.c"
 #include "middlewares/rtt_log/core_printf.c"
 
-/* SVPWM */
+/* SVPWM模块 */
 #include "middlewares/svpwm/svpwm.c"
 
 /********************************* END OF FILE ********************************/

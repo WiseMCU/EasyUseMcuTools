@@ -112,7 +112,7 @@ extern "C" {
 /* RTT打印工具 */
 #include "middlewares/rtt_log/core_printf.h"
 
-/* RTT打印工具 */
+/* SVPWM模块 */
 #include "middlewares/svpwm/svpwm.h"
 
 #ifdef __cplusplus
