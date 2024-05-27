@@ -62,6 +62,10 @@ typedef struct sSVPWM
     float   b_pwm_duty;      // B相的PWM的比较器值，即比较器的配置值
     float   c_pwm_duty;      // C相的PWM的比较器值，即比较器的配置值
 
+    /* 输入反帕克变换的Ud,Uq */
+    float Ud;
+    float Uq;
+
     /* 计算三相占空比输出值的函数指针 */
     void (*m_calc)(struct sSVPWM*);
 } svpwm_t;
@@ -75,6 +79,8 @@ typedef struct sSVPWM
     .vector_angle   = 0.0f,         \
     .u_dc           = 0.0f,         \
     .counter_period = 0.0f,         \
+    .Ud             = 0.0f,         \
+    .Uq             = 0.0f,         \
     .a_pwm_duty     = 0.0f,         \
     .b_pwm_duty     = 0.0f,         \
     .c_pwm_duty     = 0.0f,         \

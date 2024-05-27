@@ -40,6 +40,7 @@ void svpwm_calc(svpwm_t* svpwm_handle)
         case ALPHA_BETA:
             svpwm_handle->vector_value = hypotf(svpwm_handle->u_beta, svpwm_handle->u_alpha);
             svpwm_handle->vector_angle = atan2f(svpwm_handle->u_beta, svpwm_handle->u_alpha);
+            svpwm_handle->vector_angle += M_Pi;
         break;
         
         case US_ANGLE:
@@ -52,8 +53,6 @@ void svpwm_calc(svpwm_t* svpwm_handle)
     if(svpwm_handle->vector_value > fMaxUs) svpwm_handle->vector_value = fMaxUs;
     
     fScaledUs = svpwm_handle->vector_value / fMaxUs;
-    
-    // svpwm_handle->vector_angle += M_Pi;
     
     sector = (uint8_t)(svpwm_handle->vector_angle * (1.0f / M_Pi_3));
     
