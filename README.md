@@ -42,4 +42,4 @@ for(float angle = 0.0f; angle < 2 * PI; angle += 0.01f)
 
 ### 结果如图：
 
-![image-20240518023312764](demo.png)
+![image-20240518023312764](img/demo.png)
