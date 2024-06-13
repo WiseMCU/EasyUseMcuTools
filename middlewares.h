@@ -96,6 +96,12 @@ extern "C" {
  */
 #define RTT_TOOL_THREAD             RTT_TOOL_NONE
 
+/*---------------------------------- Filter ---------------------------------*/
+/**
+ * 滤波器最大阶数10阶
+*/
+#define FILTER_MAX_ORDER            10
+
 /* Includes -----------------------------------------------------------------*/
 /**
  * 标准库头文件
@@ -111,6 +117,12 @@ extern "C" {
 */
 /* RTT打印工具 */
 #include "middlewares/rtt_log/core_printf.h"
+
+/* SVPWM模块 */
+#include "middlewares/svpwm/svpwm.h"
+
+/* Filter模块 */
+#include "middlewares/svpwm/filter.h"
 
 #ifdef __cplusplus
 }
