@@ -1,0 +1,12 @@
+[submodule "middlewares/filter"]
+	path = middlewares/filter
+	url = git@github.com:WiseMCU/EasyUseMcuTools.git
+	branch = filter
+[submodule "middlewares/svpwm"]
+	path = middlewares/svpwm
+	url = git@github.com:WiseMCU/EasyUseMcuTools.git
+	branch = svpwm
+[submodule "middlewares/rtt_log"]
+	path = middlewares/rtt_log
+	url = git@github.com:WiseMCU/EasyUseMcuTools.git
+	branch = rtt_log
