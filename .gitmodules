@@ -1,8 +1,0 @@
-[submodule "middlewares/rtt_log"]
-	path = middlewares/rtt_log
-	url = ssh://git@git.wisemcu.cn:7022/ouyang/EasyUseMcuTools.git
-	branch = rtt_log
-[submodule "middlewares/svpwm"]
-	path = middlewares/svpwm
-	url = ssh://git@git.wisemcu.cn:7022/ouyang/EasyUseMcuTools.git
-	branch = svpwm

@@ -1,6 +1,9 @@
-# EasyUseMcuTools
-个人使用的MCU工具和驱动集合库
+# Filter模块（by：睿智的嵌入式（WiseMCU））
+模仿Matlab的Filter（一维的数字滤波器）和Filtfilt（零相位滤波）写的C语言版
 
-使用方法：引入 middlewares.c 和 middlewares.h 两个文件即可，具体工具使用方法请阅读工具说明文档
+Filter（一维的数字滤波器）输出结果与Matlab的结果完全一致
 
-- rctt_log - RTT打印工具 (已添加，单独功能在子分支)
+Filtfilt（零相位滤波）输出结果与Matlab的结果基本一致，如果a、b、zi、输入参数长度都保持一致，结果也与Matlab结果一致
+
+### 使用方法
+
