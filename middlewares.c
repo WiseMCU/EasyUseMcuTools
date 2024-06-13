@@ -18,4 +18,7 @@
 /* SVPWM模块 */
 #include "middlewares/svpwm/svpwm.c"
 
+/* Filter模块 */
+#include "middlewares/svpwm/filter.c"
+
 /********************************* END OF FILE ********************************/

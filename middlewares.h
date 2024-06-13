@@ -115,6 +115,9 @@ extern "C" {
 /* SVPWM模块 */
 #include "middlewares/svpwm/svpwm.h"
 
+/* Filter模块 */
+#include "middlewares/svpwm/filter.h"
+
 #ifdef __cplusplus
 }
 #endif

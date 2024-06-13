@@ -6,3 +6,7 @@
 	path = middlewares/svpwm
 	url = ssh://git@git.wisemcu.cn:7022/ouyang/EasyUseMcuTools.git
 	branch = svpwm
+[submodule "middlewares/filter"]
+	path = middlewares/filter
+	url = ssh://git@git.wisemcu.cn:7022/ouyang/EasyUseMcuTools.git
+	branch = filter
