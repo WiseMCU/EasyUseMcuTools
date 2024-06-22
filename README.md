@@ -1,4 +1,6 @@
 # PID模块（by：睿智的嵌入式（WiseMCU））
+模仿Matlab的PID写的C语言版
+
 PID控制模块无须额外配置直接使用
 
 ### DEMO使用说明
