@@ -23,6 +23,8 @@ void readData(const char *filename, float *data1, float *data2, int len)
 #define Kp      1.6817
 #define Ki      1.1539
 #define Kd      0.18405
+#define FILTER_PARA 0.0f
+#define CYCLE_TIME 0.01f
 
 int main()
 {
@@ -33,10 +35,10 @@ int main()
 
     /* 按照Matlab的PID系数创建PID并计算PID */
     pid_t pid_handle;
-    pid_init(&pid_handle, Kp, Ki, Kd, 0, 0xFFFF);
+    pid_init(&pid_handle, Kp, Ki, Kd, FILTER_PARA, CYCLE_TIME);
     for(int i = 0; i < len; i++)
     {
-        pid_out[i] = pid_calc(&pid_handle, matlab_pid_out[i]);
+        pid_out[i] = pid_calc(&pid_handle, matlab_pid_out[i], 0.0f);
     }
 
     /* 保存数据到output.csv */

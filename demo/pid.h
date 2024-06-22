@@ -23,22 +23,18 @@ extern "C" {
 #include "stdint.h"
 
 /* Define   ------------------------------------------------------------------*/
-/* 定义限制函数宏 */
-#define CONSTRAIN(amt, low, high) \
-    ((amt) < (low) ? (low) : ((amt) > (high) ? (high) : (amt)))
-
 /* 定义 PID 结构体 */
-typedef struct {
-    float kp;                   // 比例系数
-    float ki;                   // 积分系数
-    float kd;                   // 微分系数
-    float output_ramp;          // 输出变化率限制
-    float limit;                // 输出限制
-    float prev_error;           // 上一次误差
-    float prev_output;          // 上一次输出
-    float prev_integral;        // 上一次积分值
-    uint64_t prev_timestamp;    // 上一次时间戳
-} pid_t;
+typedef struct
+{
+    float kp;               // 比例系数
+    float ki;               // 积分系数
+    float kd;               // 微分系数
+    float filter_para;      // 滤波系数
+    /* 若10ms计算一次PID则 cycle_time = 0.01f */
+    float cycle_time;       // PID计算周期时间s
+    float filter_data;      // 滤波数据
+    float integrator_data;  // 积分数据
+}pid_t;
 
 /* Function ------------------------------------------------------------------*/
 /**
@@ -48,30 +44,30 @@ typedef struct {
  * @param[in] kp  比例系数
  * @param[in] ki  积分系数
  * @param[in] kd  微分系数
- * @param[in] output_ramp 输出变化率限制
- * @param[in] limit 输出限制
+ * @param[in] filter_para 滤波器系数
+ * @param[in] cycle_time  PID计算周期时间s
  */
-extern void pid_init(pid_t *pid, float kp, float ki, float kd, float output_ramp, float limit);
+extern void pid_init(pid_t *pid_tcb, float kp, float ki, float kd, float filter_para, float cycle_time);
 
 /**
  * PID控制器计算
  *
- * @param[in] pid   PID控制器指针
- * @param[in] error 当前误差
- * @return          控制器输出
+ * @param[in] pid       PID控制器指针
+ * @param[in] target    期望值
+ * @param[in] current   当前值
+ * @return              控制器输出
  */
-extern float pid_calc(pid_t *pid, float error);
+extern float pid_calc(pid_t *pid_tcb, float target, float current);
 
 /**
  * 设置 PID 参数
  *
- * @param[in] pid         PID控制器指针
- * @param[in] kp          比例系数
- * @param[in] ki          积分系数
- * @param[in] kd          微分系数
- * @param[in] output_ramp 输出变化率限制
+ * @param[in] pid   PID控制器指针
+ * @param[in] kp    比例系数
+ * @param[in] ki    积分系数
+ * @param[in] kd    微分系数
  */
-extern void pid_set(pid_t *pid, float kp, float ki, float kd, float output_ramp);
+extern void pid_set(pid_t *pid_tcb, float kp, float ki, float kd);
 
 #ifdef __cplusplus
 }
