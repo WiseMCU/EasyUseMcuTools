@@ -6,9 +6,11 @@
  * @attention 使用示例：
  *              ① 初始化PID模块：pid_t pid;
  *              ② 配置PID模块输入参数,并计算打印：
- *              pid_calc(&pid, focdrv.id);
+ *              pid_init(&pid_handle, KP, KI, KD, FILTER_PARA, CYCLE_TIME);
+ *              pid_out = pid_calc(&pid_handle, Target, Current);
+ *              DEBUG("pid: %f", pid_out);
  *              ③ 终端显示：
- *              [00:00:00.000] Angle: 1.047198, A: 575.000061, B: 575.000061, C: 575.000061
+ *              [00:00:00.000] pid: 0.0
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -20,7 +22,6 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "stdint.h"
 
 /* Define   ------------------------------------------------------------------*/
 /* 定义 PID 结构体 */
