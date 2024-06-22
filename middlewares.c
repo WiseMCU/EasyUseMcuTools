@@ -21,4 +21,7 @@
 /* Filter模块 */
 #include "middlewares/svpwm/filter.c"
 
+/* PID模块 */
+#include "middlewares/pid/pid.c"
+
 /********************************* END OF FILE ********************************/

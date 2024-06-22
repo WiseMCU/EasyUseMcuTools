@@ -124,6 +124,9 @@ extern "C" {
 /* Filter模块 */
 #include "middlewares/svpwm/filter.h"
 
+/* PID模块 */
+#include "middlewares/pid/pid.h"
+
 #ifdef __cplusplus
 }
 #endif

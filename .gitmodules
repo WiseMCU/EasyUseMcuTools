@@ -10,3 +10,7 @@
 	path = middlewares/filter
 	url = ssh://git@git.wisemcu.cn:7022/ouyang/EasyUseMcuTools.git
 	branch = filter
+[submodule "middlewares/pid"]
+	path = middlewares/pid
+	url = ssh://git@git.wisemcu.cn:7022/ouyang/EasyUseMcuTools.git
+	branch = pid
