@@ -77,30 +77,41 @@ extern "C" {
 /**
  * 调试信息输出总开关
  */
-#define DEBUG_ENABLE                1
+#ifndef DEBUG_ENABLE
+    #define DEBUG_ENABLE            1
+#endif
 
 /**
  * 调试信息时间格式化设置
  *
  * @note 时间格式化将消耗较多算力，若资源紧张可直接注释此宏定义
  */
-#define DEBUG_TIME_FORMAT_ENABLE    1
+#ifndef DEBUG_TIME_FORMAT_ENABLE
+    #define DEBUG_TIME_FORMAT_ENABLE    1
+#endif
 
 /**
  * 屏蔽打印等级配置
  */
-#define DEBUG_LEVEL                 DEBUG_LEVEL_LOG
+#ifndef DEBUG_LEVEL
+    #define DEBUG_LEVEL             DEBUG_LEVEL_LOG
+#endif
 
 /**
  * RTT打印操作系统配置定义
  */
-#define RTT_TOOL_THREAD             RTT_TOOL_NONE
+#ifndef RTT_TOOL_THREAD
+    #define RTT_TOOL_THREAD         RTT_TOOL_NONE
+#endif
+
 
 /*---------------------------------- Filter ---------------------------------*/
 /**
  * 滤波器最大阶数10阶
 */
-#define FILTER_MAX_ORDER            10
+#ifndef FILTER_MAX_ORDER
+    #define FILTER_MAX_ORDER        10
+#endif
 
 /* Includes -----------------------------------------------------------------*/
 /**
