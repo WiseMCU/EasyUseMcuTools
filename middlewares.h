@@ -122,7 +122,7 @@ extern "C" {
 #include "middlewares/svpwm/svpwm.h"
 
 /* Filter模块 */
-#include "middlewares/svpwm/filter.h"
+#include "middlewares/filter/filter.h"
 
 /* PID模块 */
 #include "middlewares/pid/pid.h"
