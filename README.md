@@ -1,45 +1,90 @@
-# SVPWM模块（by：睿智的嵌入式（WiseMCU））
-使用SVPWM输出马鞍波，原仓库：[rubinsteina13/C_SVPWM_LIB](https://github.com/rubinsteina13/C_SVPWM_LIB)
+# PID模块（by：睿智的嵌入式（WiseMCU））
+模仿Matlab的PID写的C语言版
 
-可以直接使用，不需要额外配置
+PID控制模块无须额外配置直接使用
 
-### 使用示例：
+### DEMO使用说明
 
-```c
-/* 宏定义PI */
-#define PI    3.1415926535897f
-svpwm_t svpwm = SVPWM_DEFAULTS;
-/* 配置电矢量模式 */
-svpwm.para_type = US_ANGLE;
-/* 配置母线电压10V */
-svpwm.u_dc = 10.0f;
-/* 配置定时器计数值1000 */
-svpwm.counter_period = 1000;
-/* 配置电矢量模1V */
-svpwm.vector_value = 1.0f;
-/* 配置电矢量角度60° */
-svpwm.vector_angle = PI / 3;
-/* 开始计算三相输出的比较器值 */
-svpwm.m_calc(&svpwm);
-/* 打印结果 */
-DEBUG("Angle: %f, A: %f, B: %f, C: %f", svpwm.vector_angle, 
-    svpwm.a_pwm_duty, svpwm.b_pwm_duty, svpwm.b_pwm_duty);
-```
+1.  #### 获取PID控制器参数
 
-### 编写测试DEMO：
+    打开Matlab的Simulink创建一个PID系统仿真
+    ![](img/image-20240622172542334.png)
+    训练PID参数达到合适滤波效果
+    ![image-20240622172602919](img/image-20240622172602919.png)
+    假设如图已经达到预期效果获取PID参数、滤波器系数、计算周期，同时**将Simulink的PID输入输出导出到Matlab.csv**
+    ![image-20240622172628132](img/image-20240622172628132.png)
 
-```c
-for(float angle = 0.0f; angle < 2 * PI; angle += 0.01f)
-{
-    svpwm.vector_angle = angle; // 更新角度
-    svpwm.m_calc(&svpwm);
-    DEBUG("Angle: %f, A: %f, B: %f, C: %f", svpwm.vector_angle, 
-        svpwm.a_pwm_duty, svpwm.b_pwm_duty, svpwm.b_pwm_duty);
-}
-```
+2.  #### 编写测试demo程序
 
-将数据可视化
+    1.  准备好matlab.csv数据，编写C语言使用Matlab的PID系数创建PID，并按照Matlab的PID输入计算一遍比较输出结果
 
-### 结果如图：
+        ```c
+        #include <stdio.h>
+        #include "pid.h"
+        
+        /* 读取data.csv文件数据*/
+        void readData(const char *filename, float *data1, float *data2, float *data3, int len)
+        {
+            FILE *fp = fopen(filename, "r");
+            if (fp == NULL)
+            {
+                printf("Failed to open file %s\n", filename);
+                return;
+            }
+        
+            for (int i = 0; i < len; i++)
+            {
+                fscanf(fp, "%f,%f,%f", &data1[i], &data2[i], &data3[i]);
+            }
+        
+            fclose(fp);
+        }
+        
+        #define KP          0.199666833293656f
+        #define KI          39.9333666587313f
+        #define KD          0.0f
+        #define FILTER_PARA 100.0f
+        #define CYCLE_TIME  0.01f
+        
+        int main(void)
+        {
+            /* 读取数据 */ 
+            const int len = 10000;
+            float pid_out[len], matlab_pid_input[len], matlab_pid_output[len], matlab_sfun_output[len];
+            
+            readData("matlab.csv", matlab_pid_input, matlab_pid_output, matlab_sfun_output, len);
+        
+            
+            /* 计算PID */
+            pid_t pid_handle;
+            pid_init(&pid_handle, KP, KI, KD, FILTER_PARA, CYCLE_TIME);
+            for(int i = 0; i < len; i++)
+            {
+                pid_out[i] = pid_calc(&pid_handle, matlab_pid_input[i], matlab_sfun_output[i]);
+            }
+        
+            /* 保存数据到output.csv */
+            FILE *fp = fopen("output.csv", "w");
+            if (fp == NULL)
+            {
+                printf("Failed to open file output.csv\n");
+                return 0;
+            }
+        
+            /* 将所有数据写入 */
+            for (int i = 0; i < len; i++)
+            {
+                fprintf(fp, "%f,%f\n", pid_out[i], matlab_pid_output[i]);
+            }
+        
+            fclose(fp);
+        
+            return 0;
+        }
+        ```
+    
+3.  #### 运行demo，可视化结果
 
-![image-20240518023312764](img/demo.png)
+    [^Matlab的PID计算结果-C语言PID计算结果 ]: 结果完全一致
+
+    ![image-20240622173219607](img/image-20240622173219607.png)
