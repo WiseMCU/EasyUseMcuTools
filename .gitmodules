@@ -10,3 +10,7 @@
 	path = middlewares/rtt_log
 	url = git@github.com:WiseMCU/EasyUseMcuTools.git
 	branch = rtt_log
+[submodule "middlewares/pid"]
+	path = middlewares/pid
+	url = git@github.com:WiseMCU/EasyUseMcuTools.git
+	branch = pid

@@ -6,3 +6,4 @@
 - rtt_log - RTT打印工具 (已添加，单独功能在子分支)
 - svpwm - SVPWM马鞍波输出（已添加，单独功能在子分支）
 - filter - Matlab滤波器C语言版本（已添加，单独功能在子分支）
+- pid - Matlab的pid控制器C语言版本（已添加，单独功能在子分支）
