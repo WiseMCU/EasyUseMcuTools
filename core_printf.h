@@ -55,7 +55,7 @@ extern "C" {
  */
 #ifndef DEBUG_ENABLE
     /* 默认开启打印 */
-    #define DEBUG_ENABLE                1
+    #define DEBUG_ENABLE
 #endif
 
 /**
@@ -65,7 +65,7 @@ extern "C" {
  */
 #ifndef DEBUG_TIME_FORMAT_ENABLE
     /* 默认开启时间格式化 */
-    #define DEBUG_TIME_FORMAT_ENABLE    1
+    #define DEBUG_TIME_FORMAT_ENABLE
 #endif
 
 /**
@@ -73,7 +73,7 @@ extern "C" {
  */
 #ifndef DEBUG_LEVEL
     /* 默认所有等级都打印 */
-    #define DEBUG_LEVEL                 DEBUG_LEVEL_LOG
+    #define DEBUG_LEVEL         DEBUG_LEVEL_LOG
 #endif
 
 /**
@@ -81,7 +81,7 @@ extern "C" {
  */
 #ifndef RTT_TOOL_THREAD
     /* 默认不使用操作系统 */
-    #define RTT_TOOL_THREAD             RTT_TOOL_NONE
+    #define RTT_TOOL_THREAD     RTT_TOOL_NONE
 #endif
 
 #if (RTT_TOOL_THREAD == RTT_TOOL_THREADX)
