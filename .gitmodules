@@ -1,16 +1,16 @@
 [submodule "middlewares/rtt_log"]
 	path = middlewares/rtt_log
-	url = git@git.wisemcu.cn:ouyang/EasyUseMcuTools.git
+	url = git@github.com:WiseMCU/EasyUseMcuTools.git
 	branch = rtt_log
 [submodule "middlewares/svpwm"]
 	path = middlewares/svpwm
-	url = git@git.wisemcu.cn:ouyang/EasyUseMcuTools.git
+	url = git@github.com:WiseMCU/EasyUseMcuTools.git
 	branch = svpwm
 [submodule "middlewares/filter"]
 	path = middlewares/filter
-	url = git@git.wisemcu.cn:ouyang/EasyUseMcuTools.git
+	url = git@github.com:WiseMCU/EasyUseMcuTools.git
 	branch = filter
 [submodule "middlewares/pid"]
 	path = middlewares/pid
-	url = git@git.wisemcu.cn:ouyang/EasyUseMcuTools.git
+	url = git@github.com:WiseMCU/EasyUseMcuTools.git
 	branch = pid
