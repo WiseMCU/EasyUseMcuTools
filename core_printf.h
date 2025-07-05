@@ -48,6 +48,7 @@ extern "C" {
 #define RTT_TOOL_NONE                   0 // 不使用操作系统
 #define RTT_TOOL_THREADX                1 // 使用ThreadX操作系统
 #define RTT_TOOL_RTX5                   2 // 使用RTX5操作系统
+#define RTT_TOOL_RTT                    3 // 使用RT-Thread操作系统
 
 /**
  * 调试信息输出总开关
@@ -89,6 +90,9 @@ extern "C" {
 #elif (RTT_TOOL_THREAD == RTT_TOOL_RTX5)
     /* 使用RTX5操作系统 */
     #include "cmsis_os2.h"
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTT)
+    /* 使用RT-Thread操作系统 */
+    #include "rtthread.h"
 #elif (RTT_TOOL_THREAD == RTT_TOOL_NONE)
     /* 无操作系统 */
 #endif
@@ -107,6 +111,12 @@ extern "C" {
                             (osKernelGetTickCount() / 1000 % 60),        \
                             (osKernelGetTickCount() % 1000)
     #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTT)
+    #define GET_TIME()      (rt_tick_get() / 1000 / 3600),      \
+                            (rt_tick_get() / 1000 % 3600 / 60), \
+                            (rt_tick_get() / 1000 % 60),        \
+                            (rt_tick_get() % 1000)
+    #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
 #elif (RTT_TOOL_THREAD == RTT_TOOL_NONE)
     #define GET_TIME()      0, 0, 0, 0
     #define TIME_FMT        "[%02d:%02d:%02d.%03d] "
@@ -119,6 +129,10 @@ extern "C" {
 #elif (RTT_TOOL_THREAD == RTT_TOOL_RTX5)
     /* 使用RTX5操作系统 */
     #define GET_TIME()      osKernelGetTickCount()
+    #define TIME_FMT        "[%8d] "
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTT)
+    /* 使用RT-Thread操作系统 */
+    #define GET_TIME()      rt_tick_get()
     #define TIME_FMT        "[%8d] "
 #elif (RTT_TOOL_THREAD == RTT_TOOL_NONE)
     /* 无操作系统 */

@@ -27,6 +27,8 @@
     static TX_MUTEX segger_rtt_mutex;
 #elif (RTT_TOOL_THREAD == RTT_TOOL_RTX5)
     static osMutexId_t segger_rtt_mutex;
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTT)
+    static struct rt_mutex segger_rtt_mutex;
 #endif
 
 /**
@@ -50,6 +52,8 @@ int32_t segger_rtt_init(void)
     tx_mutex_create(&segger_rtt_mutex, "SEGGER RTT MUTEX", TX_INHERIT);
 #elif (RTT_TOOL_THREAD == RTT_TOOL_RTX5)
     segger_rtt_mutex = osMutexNew(&(const osMutexAttr_t ){.name = "SEGGER RTT MUTEX"});
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTT)
+    rt_mutex_init(&segger_rtt_mutex, "SEGGER RTT MUTEX", RT_IPC_FLAG_FIFO);
 #endif
 
     /* 发送清屏指令，RTT通道0将自动初始化 */
@@ -57,6 +61,10 @@ int32_t segger_rtt_init(void)
 
     return 0;
 }
+#if (RTT_TOOL_THREAD == RTT_TOOL_RTT)
+    /* 使用组件自动初始化机制 */
+    INIT_BOARD_EXPORT(segger_rtt_init);
+#endif
 
 /**
  * 将格式化数据打印到标准输出
@@ -73,6 +81,8 @@ void core_printf(const char *fmt, ...)
     tx_mutex_get(&segger_rtt_mutex, TX_WAIT_FOREVER);
 #elif (RTT_TOOL_THREAD == RTT_TOOL_RTX5)
     osMutexAcquire(segger_rtt_mutex, osWaitForever);
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTT)
+    rt_mutex_take(&segger_rtt_mutex, RT_WAITING_FOREVER);
 #endif
     
     /* 开始处理可变参数并填充缓冲区 */
@@ -88,6 +98,8 @@ void core_printf(const char *fmt, ...)
     tx_mutex_put(&segger_rtt_mutex);
 #elif (RTT_TOOL_THREAD == RTT_TOOL_RTX5)
     osMutexRelease(segger_rtt_mutex);
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTT)
+    rt_mutex_release(&segger_rtt_mutex);
 #endif
 }
 
@@ -110,6 +122,8 @@ void cmd_printf(char* para, uint32_t paralen, const char *fmt, ...)
     tx_mutex_get(&segger_rtt_mutex, TX_WAIT_FOREVER);
 #elif (RTT_TOOL_THREAD == RTT_TOOL_RTX5)
     osMutexAcquire(segger_rtt_mutex, osWaitForever);
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTT)
+    rt_mutex_take(&segger_rtt_mutex, RT_WAITING_FOREVER);
 #endif
 
     /* 开始处理可变参数并填充缓冲区 */
@@ -125,9 +139,11 @@ void cmd_printf(char* para, uint32_t paralen, const char *fmt, ...)
     } else {
         /* 发生溢出，释放互斥体并返回 */
 #if (RTT_TOOL_THREAD == RTT_TOOL_THREADX)
-        tx_mutex_put(&segger_rtt_mutex);
+    tx_mutex_put(&segger_rtt_mutex);
 #elif (RTT_TOOL_THREAD == RTT_TOOL_RTX5)
-        osMutexRelease(segger_rtt_mutex);
+    osMutexRelease(segger_rtt_mutex);
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTT)
+    rt_mutex_release(&segger_rtt_mutex);
 #endif
         
         return;
@@ -146,9 +162,11 @@ void cmd_printf(char* para, uint32_t paralen, const char *fmt, ...)
             } else {
                 /* 发生溢出，释放互斥体并返回 */
 #if (RTT_TOOL_THREAD == RTT_TOOL_THREADX)
-                tx_mutex_put(&segger_rtt_mutex);
+    tx_mutex_put(&segger_rtt_mutex);
 #elif (RTT_TOOL_THREAD == RTT_TOOL_RTX5)
-                osMutexRelease(segger_rtt_mutex);
+    osMutexRelease(segger_rtt_mutex);
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTT)
+    rt_mutex_release(&segger_rtt_mutex);
 #endif
                 return;
             }
@@ -169,5 +187,7 @@ void cmd_printf(char* para, uint32_t paralen, const char *fmt, ...)
     tx_mutex_put(&segger_rtt_mutex);
 #elif (RTT_TOOL_THREAD == RTT_TOOL_RTX5)
     osMutexRelease(segger_rtt_mutex);
+#elif (RTT_TOOL_THREAD == RTT_TOOL_RTT)
+    rt_mutex_release(&segger_rtt_mutex);
 #endif
 }
