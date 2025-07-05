@@ -32,7 +32,7 @@
 /**
  * 如果未开启打印则不定义缓存区节约内存
 */
-#if(DEBUG_ENABLE)
+#ifdef DEBUG_ENABLE
 /* 创建缓冲区 */
 static char rtt_buffer[RTT_PRINTF_BUFFER_SIZE];
 #endif /* DEBUG_ENABLE */

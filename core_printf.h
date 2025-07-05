@@ -93,8 +93,8 @@ extern "C" {
     /* 无操作系统 */
 #endif
 
-#if(DEBUG_ENABLE)
-#if(DEBUG_TIME_FORMAT_ENABLE)
+#ifdef DEBUG_ENABLE
+#ifdef DEBUG_TIME_FORMAT_ENABLE
 #if (RTT_TOOL_THREAD == RTT_TOOL_THREADX)
     #define GET_TIME()      (tx_time_get() / 1000 / 3600),      \
                             (tx_time_get() / 1000 % 3600 / 60), \
