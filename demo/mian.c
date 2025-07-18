@@ -1,5 +1,23 @@
 #include <stdio.h>
 #include "pid.h"
+#include <string.h>
+
+float pid_calculate(pid_t *pid, float target, float current)
+{
+    /* 计算当前误差 */
+    float current_error = target - current;
+
+    /* 计算增量值 */
+    float output = pid->kp * (current_error - pid->last_error)
+                 + pid->ki *  current_error
+                 + pid->kd * (current_error - 2 * pid->last_error + pid->prev_error);
+
+    /* 存储误差，用于下次计算 */
+    pid->prev_error = pid->last_error;
+    pid->last_error = current_error;
+
+    return output;
+}
 
 /* 读取data.csv文件数据*/
 void readData(const char *filename, float *data1, float *data2, float *data3, int len)
@@ -30,13 +48,22 @@ int main(void)
     /* 读取数据 */ 
     const int len = 10000;
     float pid_out[len], matlab_pid_input[len], matlab_pid_output[len], matlab_sfun_output[len];
+
+    extern float col1[10000]; // 模拟数据
+    extern float col2[10000]; // 模拟数据
+    extern float col3[10000]; // 模拟数据
     
     readData("matlab.csv", matlab_pid_input, matlab_pid_output, matlab_sfun_output, len);
 
-    
+    /* C语言无法直接读取表格的情况下可以使用main.py将表格转换成C数组 */
+    // memcpy(matlab_pid_input,    col1, sizeof(float) * len); // matlab_pid_input
+    // memcpy(matlab_pid_output,   col2, sizeof(float) * len); // matlab_pid_output
+    // memcpy(matlab_sfun_output,  col3, sizeof(float) * len); // matlab_sfun_output
+
     /* 计算PID */
     pid_t pid_handle;
     pid_init(&pid_handle, KP, KI, KD, FILTER_PARA, CYCLE_TIME);
+
     for(int i = 0; i < len; i++)
     {
         pid_out[i] = pid_calc(&pid_handle, matlab_pid_input[i], matlab_sfun_output[i]);
